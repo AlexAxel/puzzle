@@ -18,3 +18,12 @@
 @media(max-width:680px){.game{padding:7px}.board{border-radius:12px}.board:before{inset:9px}.board-head{left:20px;right:20px;top:22px}.identity-symbol{width:35px;height:35px;font-size:24px}.identity{gap:7px}.identity strong{font-size:10px}.identity small{font-size:7px;letter-spacing:.14em}.top-actions{gap:5px}.tool-button{padding:7px 9px;font-size:10px;min-height:37px;gap:5px}.tool-icon{font-size:18px}.long-label{display:none}.playfield,.settings-open .playfield{top:77px;bottom:78px;left:18px;right:18px}.settings-panel{left:50%;top:78px;transform:translate(-50%,-12px) scale(.96);width:min(calc(100% - 44px),340px);max-height:calc(100% - 155px);overflow:auto}.settings-open .settings-panel{transform:translate(-50%,0) scale(1)}.settings-open .playfield:before{content:"";position:absolute;inset:0;background:#1c10097a;z-index:10;pointer-events:none}.board-foot{left:19px;right:19px;bottom:25px;flex-wrap:wrap}.board-info{font-size:10px;max-width:180px}.rotation-controls{margin-left:auto}.mobile-instructions{display:none}}
 @media(max-width:370px){.identity small{display:none}.identity strong{font-size:9px}.tool-button{padding:7px}.board-head{left:16px;right:16px}.tool-button.primary span:last-child{max-width:75px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 @media(prefers-reduced-motion:reduce){.settings-panel,.playfield,.tool-button{transition:none!important}}
+
+
+/* Optional cutting patterns: controls kept in the existing compact panel. */
+.cut-style-field{margin-top:19px}
+.cut-style-field label{display:block;font-size:12px;font-weight:700;color:#f2e3c9;margin-bottom:9px}
+.cut-style-select{display:block;width:100%;height:42px;appearance:none;-webkit-appearance:none;background:linear-gradient(45deg,transparent 50%,#ddba89 50%) calc(100% - 18px) 18px/6px 6px no-repeat,linear-gradient(135deg,#ddba89 50%,transparent 50%) calc(100% - 12px) 18px/6px 6px no-repeat,#3e2a1cbf;color:#f4e4c9;border:1px solid #bb94665e;border-radius:8px;padding:0 32px 0 12px;font-size:12px;cursor:pointer}
+.cut-style-select:hover{border-color:#e3b47eaa}
+.cut-style-select option{background:#382519;color:#f8e5cc}
+.cut-style-hint{font-size:10px;line-height:1.55;color:#baa185;margin:8px 0 0;min-height:30px}
