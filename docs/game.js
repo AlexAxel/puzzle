@@ -213,26 +213,50 @@ gr.node.remove();s.groups.delete(gr.id);target.z=++s.z;gr=target;position(gr);s.
 if(count)toast(s.groups.size===1?"Пазл собран! Детали соединены навсегда.":"Детали соединились!");
 status();
 }
+// Short clicks/taps rotate 15 degrees; a real drag only moves the piece.
+// Touch pointers have a slightly larger dead zone to ignore finger jitter.
+function dragThreshold(e){return e.pointerType==="touch"?9:5}
 stage.addEventListener("pointerdown",e=>{
 if(!s.cut||s.animating||s.drag||(e.pointerType==="mouse"&&e.button!==0))return;
 const v=point(e),gr=pick(v.x,v.y);if(!gr)return;select(gr);
-s.drag={id:e.pointerId,gr,px:v.x,py:v.y,x:gr.x,y:gr.y};
-stage.classList.add("dragging");stage.setPointerCapture(e.pointerId);e.preventDefault();
+s.drag={id:e.pointerId,gr,px:v.x,py:v.y,x:gr.x,y:gr.y,threshold:dragThreshold(e),moved:false};
+stage.setPointerCapture(e.pointerId);e.preventDefault();
 });
 stage.addEventListener("pointermove",e=>{
 if(!s.cut||s.animating)return;
 if(s.drag&&s.drag.id===e.pointerId){
-const v=point(e),d=s.drag;d.gr.x=d.x+v.x-d.px;d.gr.y=d.y+v.y-d.py;position(d.gr);e.preventDefault();
+const v=point(e),d=s.drag;
+if(Math.hypot(v.x-d.px,v.y-d.py)>=d.threshold)d.moved=true;
+if(d.moved){
+stage.classList.add("dragging");
+d.gr.x=d.x+v.x-d.px;d.gr.y=d.y+v.y-d.py;position(d.gr);
+}
+e.preventDefault();
 }else if(e.pointerType==="mouse"){const v=point(e),gr=pick(v.x,v.y);s.hover=gr?gr.id:null}
 });
 function release(e){
 if(!s.drag||s.drag.id!==e.pointerId)return;
-const d=s.drag,gr=d.gr,moved=Math.hypot(gr.x-d.x,gr.y-d.y)>3;s.drag=null;stage.classList.remove("dragging");
+const d=s.drag,gr=d.gr;
+const v=point(e);
+if(Math.hypot(v.x-d.px,v.y-d.py)>=d.threshold)d.moved=true;
+s.drag=null;stage.classList.remove("dragging");
 try{if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId)}catch(err){}
-if(moved)snap(gr);
+if(e.type==="pointercancel")return;
+if(d.moved){
+gr.x=d.x+v.x-d.px;gr.y=d.y+v.y-d.py;position(gr);
+snap(gr);
+}else{
+// Ignore subthreshold movement completely; only a stationary tap rotates.
+gr.x=d.x;gr.y=d.y;position(gr);
+s.active=gr.id;turn(15);
+}
 }
 stage.addEventListener("pointerup",release);stage.addEventListener("pointercancel",release);
-stage.addEventListener("lostpointercapture",e=>{if(s.drag&&s.drag.id===e.pointerId){const gr=s.drag.gr;s.drag=null;stage.classList.remove("dragging");snap(gr)}});
+stage.addEventListener("lostpointercapture",e=>{
+if(!s.drag||s.drag.id!==e.pointerId)return;
+const d=s.drag;s.drag=null;stage.classList.remove("dragging");
+if(d.moved)snap(d.gr);
+});
 function turn(deg,at){
 if(!s.cut||s.animating||s.drag)return;
 let gr=at?pick(point(at).x,point(at).y):null;
