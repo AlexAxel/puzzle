@@ -4,9 +4,10 @@
 <meta name="theme-color" content="#49301e">
 <meta name="description" content="Мастерская пазлов. Разрежьте свою картинку, перемешайте детали и соберите её на деревянной доске.">
 <title>Puzzle Atelier — Мастерская пазлов</title>
-<link rel="stylesheet" href="./styles.css?v=20261031-recovery-1">
+<link rel="stylesheet" href="./styles.css?v=20261031-ornate-1">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" defer></script>
-<script src="./game.js?v=20261031-recovery-1" defer></script>
+<script src="./ornate-cut.js?v=1" defer></script>
+<script src="./game.js?v=20261031-ornate-1" defer></script>
 </head><body>
 <main id="game" class="game settings-open">
   <div class="board" aria-label="Деревянная доска для пазлов">
@@ -29,6 +30,7 @@
         <span class="upload-text"><strong id="file-name">Загрузить изображение</strong><small id="file-hint">JPG · PNG · WEBP · SVG</small></span>
         <span class="upload-arrow">↗</span>
       </label>
+      <div class="cut-style-field"><label for="cut-style">Тип нарезки</label><select id="cut-style" class="cut-style-select"><option value="classic" selected>Классический</option><option value="ornate">Узорный · экспериментальный</option></select><p class="cut-style-hint" id="cut-style-hint">Традиционные детали с одним фигурным соединением на каждой стороне.</p></div>
       <div class="size-heading"><label for="size-range">Размер деталей</label><span id="size-value">90 пикс.</span></div>
       <input id="size-range" class="size-range" type="range" min="54" max="168" step="6" value="90">
       <div class="range-captions"><span>Мельче</span><span>Крупнее</span></div>
