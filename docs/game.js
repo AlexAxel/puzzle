@@ -285,6 +285,12 @@ render(false);s.active=gr.id;s.hover=null;toast("Все детали соеди�
 }
 $("shuffle-button").onclick=shuffle;$("reset-button").onclick=reset;$("cut-button").onclick=()=>cut(true);
 slider.addEventListener("input",sizeLabel);
+const cutStyle=$("cut-style");
+cutStyle.addEventListener("change",()=>{
+  $("cut-style-hint").textContent=cutStyle.value==="ornate"
+    ?"Плавные лепестковые и завитковые стыки. Первый процедурный вариант; силуэты животных добавим отдельно."
+    :"Традиционные детали с одним фигурным соединением на каждой стороне.";
+});
 function upload(f){
 if(!f)return;
 if(!f.type.startsWith("image/")&&!/\.(jpe?g|png|webp|bmp|avif|gif|svg)$/i.test(f.name)){toast("Нужен файл изображения.");return}
