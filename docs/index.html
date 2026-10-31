@@ -30,21 +30,21 @@
         <span class="upload-arrow">↗</span>
       </label>
       <div class="size-heading"><label for="size-range">Размер деталей</label><span id="size-value">90 пикс.</span></div>
-      <input id="size-range" class="size-range" type="range" min="54" max="168" step="6" value="90">
-      <div class="range-captions"><span>Мельче</span><span>Крупнее</span></div>
+      <input id="size-range" class="size-range" type="range" min="18" max="168" step="3" value="90">
+      <div class="range-captions"><span>Мелкие детали</span><span>Крупные детали</span></div>
       <div class="piece-count"><span class="count-sigil">✣</span><span id="grid-label">Ориентировочно 48 деталей</span></div>
       <button type="button" id="cut-button" class="cut-button">✂ <span>Разрезать изображение</span><span>↗</span></button>
       <small class="local-note">Файл остаётся у вас: обработка в браузере.</small>
     </section>
 
     <div id="playfield" class="playfield">
-      <div id="stage" class="stage" aria-label="Игровое поле. Перетаскивайте детали мышкой, поворачивайте колесом или кнопками."></div>
+      <div id="stage" class="stage" aria-label="Игровое поле. Левая кнопка — перемещение деталей, средняя — панорамирование, колесо на свободном месте — масштаб, колесо над деталью — поворот."><div id="puzzle-world" class="puzzle-world"></div></div>
     </div>
 
     <div class="board-foot">
       <div class="board-info"><span class="tiny-star">✦</span><span id="status">Готово к игре</span></div>
-      <div class="instructions"><span class="desktop-instructions">Перетащите деталь мышкой · Поворот колесом или Q / E</span><span class="mobile-instructions">Перетаскивайте и поворачивайте детали</span></div>
-      <div class="rotation-controls"><button id="rotate-left" title="Повернуть выбранную деталь против часовой стрелки" aria-label="Повернуть влево">↶</button><span>15°</span><button id="rotate-right" title="Повернуть выбранную деталь по часовой стрелке" aria-label="Повернуть вправо">↷</button></div>
+      <div class="instructions"><span class="desktop-instructions">ЛКМ: детали · СКМ: камера · колесо: масштаб / поворот</span><span class="mobile-instructions">Перемещайте и масштабируйте доску</span></div>
+      <div class="camera-controls" aria-label="Масштаб доски"><button id="zoom-out" title="Отдалить" aria-label="Отдалить">−</button><button id="zoom-reset" title="Вернуть масштаб и положение камеры" aria-label="Вернуть камеру"><span id="zoom-value">100%</span></button><button id="zoom-in" title="Приблизить" aria-label="Приблизить">+</button></div><div class="rotation-controls"><button id="rotate-left" title="Повернуть выбранную деталь против часовой стрелки" aria-label="Повернуть влево">↶</button><span>15°</span><button id="rotate-right" title="Повернуть выбранную деталь по часовой стрелке" aria-label="Повернуть вправо">↷</button></div>
     </div>
     <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
   </div>
