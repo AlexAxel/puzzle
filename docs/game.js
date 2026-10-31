@@ -2,7 +2,7 @@
 "use strict";
 const $=id=>document.getElementById(id),stage=$("stage"),game=$("game"),file=$("file-input"),slider=$("size-range");
 const hit=document.createElement("canvas").getContext("2d");
-const s={image:null,url:null,cut:false,cols:0,rows:0,g:null,H:[],V:[],pieces:[],groups:new Map(),seq:0,z:0,active:null,hover:null,drag:null,animating:false};
+const s={image:null,url:null,cut:false,cols:0,rows:0,g:null,H:[],V:[],corners:null,cutStyle:"classic",pieces:[],groups:new Map(),seq:0,z:0,active:null,hover:null,drag:null,animating:false};
 let toastTimer=0,resizeTimer=0;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const rot=(x,y,a)=>{const r=a*Math.PI/180;return{x:x*Math.cos(r)-y*Math.sin(r),y:x*Math.sin(r)+y*Math.cos(r)}};
@@ -36,12 +36,19 @@ $("grid-label").textContent=gr.c+" × "+gr.r+" · "+(gr.r*gr.c)+" деталей
 }
 function randomEdge(){return{sign:Math.random()>.5?1:-1,center:.465+Math.random()*.07,span:.32+Math.random()*.05,depth:.24+Math.random()*.045}}
 function edges(){
+if(s.cutStyle==="ornate"){
+const layout=window.OrnateCut.generate(s.rows,s.cols,s.g.cw,s.g.ch);
+s.H=layout.H;s.V=layout.V;s.corners=layout.corners;
+return;
+}
+s.corners=null;
 s.H=Array.from({length:s.rows-1},()=>Array.from({length:s.cols},randomEdge));
 s.V=Array.from({length:s.rows},()=>Array.from({length:s.cols-1},randomEdge));
 }
 // Each boundary is generated only once and then traversed backwards
 // by its neighboring piece, guaranteeing a geometrically exact fit.
 function trace(p,x0,y0,x1,y1,e,back,m){
+if(e&&e.kind==="ornate"){window.OrnateCut.trace(p,x0,y0,x1,y1,e,back,m);return}
 if(!e){p.lineTo(x1,y1);return}
 const sx=back?x1:x0,sy=back?y1:y0,dx=(back?x0:x1)-sx,dy=(back?y0:y1)-sy;
 const len=Math.hypot(dx,dy),nx=dy/len,ny=-dx/len,d=e.sign*e.depth*m;
@@ -64,6 +71,20 @@ else p.bezierCurveTo(...pt(back?v[3]:v[2]),...pt(back?v[2]:v[3]),...pt(back?v[1]
 }
 function pathFor(r,c){
 const w=s.g.cw,h=s.g.ch,m=Math.min(w,h),p=new Path2D();
+// Ornate cuts gently perturb four-way junctions; their positions are shared
+// by all adjacent pieces, while the original classic shape stays untouched.
+if(s.cutStyle==="ornate"&&s.corners){
+const at=(rr,cc)=>{
+const v=s.corners[rr][cc];return{x:v.x-c*w,y:v.y-r*h};
+};
+const a=at(r,c),b=at(r,c+1),d=at(r+1,c+1),e=at(r+1,c);
+p.moveTo(a.x,a.y);
+trace(p,a.x,a.y,b.x,b.y,r?s.H[r-1][c]:null,false,m);
+trace(p,b.x,b.y,d.x,d.y,c<s.cols-1?s.V[r][c]:null,false,m);
+trace(p,d.x,d.y,e.x,e.y,r<s.rows-1?s.H[r][c]:null,true,m);
+trace(p,e.x,e.y,a.x,a.y,c?s.V[r][c-1]:null,true,m);
+p.closePath();return p;
+}
 p.moveTo(0,0);
 trace(p,0,0,w,0,r?s.H[r-1][c]:null,false,m);
 trace(p,w,0,w,h,c<s.cols-1?s.V[r][c]:null,false,m);
@@ -143,6 +164,7 @@ $("status").textContent="Изображение загружено · нажми
 function cut(close=true){
 if(!s.image||s.animating)return;
 const m=measure(),grid=pickGrid(+slider.value,m);
+s.cutStyle=$("cut-style").value==="ornate"?"ornate":"classic";
 s.cols=grid.c;s.rows=grid.r;s.g={...m,cw:m.w/grid.c,ch:m.h/grid.r};s.cut=true;s.drag=null;
 edges();render(true);if(close)settings(false);
 }
