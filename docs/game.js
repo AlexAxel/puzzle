@@ -195,9 +195,9 @@ const v=point(e),d=s.drag;d.gr.x=d.x+v.x-d.px;d.gr.y=d.y+v.y-d.py;position(d.gr)
 });
 function release(e){
 if(!s.drag||s.drag.id!==e.pointerId)return;
-const gr=s.drag.gr;s.drag=null;stage.classList.remove("dragging");
+const d=s.drag,gr=d.gr,moved=Math.hypot(gr.x-d.x,gr.y-d.y)>3;s.drag=null;stage.classList.remove("dragging");
 try{if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId)}catch(err){}
-snap(gr);
+if(moved)snap(gr);
 }
 stage.addEventListener("pointerup",release);stage.addEventListener("pointercancel",release);
 stage.addEventListener("lostpointercapture",e=>{if(s.drag&&s.drag.id===e.pointerId){const gr=s.drag.gr;s.drag=null;stage.classList.remove("dragging");snap(gr)}});
