@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="./styles.css?v=20261031-ornate-1">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" defer></script>
 <script src="./ornate-cut.js?v=1" defer></script>
-<script src="./game.js?v=20261031-ornate-1" defer></script>
+<script src="./game.js?v=tap-rotate-1" defer></script>
 </head><body>
 <main id="game" class="game settings-open">
   <div class="board" aria-label="Деревянная доска для пазлов">
@@ -40,12 +40,12 @@
     </section>
 
     <div id="playfield" class="playfield">
-      <div id="stage" class="stage" aria-label="Игровое поле. Перетаскивайте детали мышкой, поворачивайте колесом или кнопками."></div>
+      <div id="stage" class="stage" aria-label="Игровое поле. Короткий клик или тап поворачивает деталь на 15 градусов. Перетаскивание перемещает её без вращения."></div>
     </div>
 
     <div class="board-foot">
       <div class="board-info"><span class="tiny-star">✦</span><span id="status">Готово к игре</span></div>
-      <div class="instructions"><span class="desktop-instructions">Перетащите деталь мышкой · Поворот колесом или Q / E</span><span class="mobile-instructions">Перетаскивайте и поворачивайте детали</span></div>
+      <div class="instructions"><span class="desktop-instructions">Клик / тап: поворот 15° · удержать и двигать: перенос</span><span class="mobile-instructions">Тап: повернуть · перетаскивание: переместить</span></div>
       <div class="rotation-controls"><button id="rotate-left" title="Повернуть выбранную деталь против часовой стрелки" aria-label="Повернуть влево">↶</button><span>15°</span><button id="rotate-right" title="Повернуть выбранную деталь по часовой стрелке" aria-label="Повернуть вправо">↷</button></div>
     </div>
     <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
