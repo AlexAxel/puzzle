@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Puzzle Atelier — тесты узорных стыков</title>
+<style>body{max-width:760px;margin:45px auto;padding:0 20px;background:#21190f;color:#f2dfc2;font:15px/1.7 system-ui,sans-serif}h1{font:normal 32px Georgia,serif}.ok{color:#9deda1}.fail{color:#ff8f87}.details{color:#bea483}pre{white-space:pre-wrap}</style>
+<script src="../ornate-cut.js"></script>
+</head>
+<body><h1>Проверка узорной нарезки</h1><p>Тесты общих рёбер и обратимости кривых Безье. Запускаются прямо в браузере.</p><div id="results"></div>
+<script>
+(function(){
+  const root=document.getElementById('results');
+  function log(ok,description){const p=document.createElement('p');p.className=ok?'ok':'fail';p.textContent=(ok?'✓ ':'✕ ')+description;root.appendChild(p)}
+  function recorder(x,y){let pos=[x,y];const steps=[];return{steps,lineTo(a,b){steps.push({t:'L',from:pos,to:[a,b]});pos=[a,b]},bezierCurveTo(a,b,c,d,e,f){steps.push({t:'C',from:pos,to:[e,f],c1:[a,b],c2:[c,d]});pos=[e,f]}}}
+  const close=(a,b)=>Math.abs(a[0]-b[0])<1e-7&&Math.abs(a[1]-b[1])<1e-7;
+  let count=0;let good=true;
+  for(let test=0;test<50;test++){
+    const g=OrnateCut.generate(6,8,75,82);
+    good&&=g.H.length===5&&g.V.length===6&&g.corners.length===7;
+    good&&=g.corners[0][0].x===0&&g.corners[0][0].y===0;
+    for(const e of g.H.flat().concat(g.V.flat())){
+      const first=recorder(11,17),reverse=recorder(100,25);
+      OrnateCut.trace(first,11,17,100,25,e,false,75);
+      OrnateCut.trace(reverse,100,25,11,17,e,true,75);
+      good&&=first.steps.length===reverse.steps.length;
+      for(let i=0;i<first.steps.length;i++){
+        const f=first.steps[i],b=reverse.steps[first.steps.length-i-1];
+        good&&=f.t===b.t&&close(f.from,b.to)&&close(f.to,b.from)&&
+          (f.t==='L'||(close(f.c1,b.c2)&&close(f.c2,b.c1)));
+      }
+      count++;
+    }
+  }
+  log(good,'Совпадение '+count+' общих рёбер при прямом и обратном обходе');
+  log(typeof OrnateCut.trace==='function'&&typeof OrnateCut.generate==='function',
+      'Генератор не зависит от движка игры');
+  if(!good){document.body.insertAdjacentHTML('beforeend','<p class="fail">Обнаружено несоответствие контуров!</p>')}
+})();
+</script></body></html>
